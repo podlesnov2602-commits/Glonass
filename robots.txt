@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://glonass-navi.kz/sitemap.xml

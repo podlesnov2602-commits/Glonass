@@ -1,0 +1,16 @@
+{
+  "name": "glonass-navi",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Glonass Navi marketing website. Static HTML, CSS and JavaScript.",
+  "scripts": {
+    "test": "node --test tests/core.test.mjs",
+    "test:site": "node scripts/check-site.mjs",
+    "test:browser": "playwright test",
+    "serve": "node scripts/serve.mjs"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}
