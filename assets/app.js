@@ -154,4 +154,5 @@ leadForm.addEventListener('submit', (event) => {
   status.textContent = 'Текст подготовлен. В WhatsApp проверьте его и нажмите «Отправить».';
   window.location.assign(whatsappUrl(message));
 });
+leadForm.querySelector('button[type="submit"]').disabled = false;
 updateCalculator();

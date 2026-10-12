@@ -88,6 +88,7 @@ test('guides and contact paths work without JavaScript', async ({ browser }) => 
   const page = await context.newPage();
   await page.goto('http://127.0.0.1:4173/');
   await expect(page.locator('h1')).toBeVisible();
+  await expect(page.getByRole('button', { name: 'Продолжить в WhatsApp' })).toBeDisabled();
   await expect(page.locator('a[href="tel:+77753715077"]').first()).toHaveAttribute('href', 'tel:+77753715077');
   for (const slug of ['gps-monitoring', 'fuel-control', 'choose-tracker']) {
     await page.goto('http://127.0.0.1:4173/guides/' + slug + '.html');
