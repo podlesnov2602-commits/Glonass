@@ -29,3 +29,5 @@ h1,h2,h3{letter-spacing:-.055em}h2{font-weight:600}a:hover{color:#0071e3}.button
 @media(max-width:390px){.hero h1{font-size:50px}.hero-actions .button{width:auto}.hero-proof{gap:12px;font-size:9px}.hero-description{font-size:15px}.hero-description strong{font-size:14px}.dashboard-brand>span:last-child{display:none}.demo-panel{height:310px}.feature-card h3{font-size:26px}.feature-card p{font-size:14px}.section-heading h2{font-size:36px}.industry-copy{padding:25px}.client-logo{height:65px}.rental-config{padding:16px 24px 28px}.rental-heading h2{font-size:46px}.saving-total strong{font-size:41px}.lead-form{padding:23px}.guide-card h3{font-size:24px}}
 @media(prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none}.hero-visual{transform:none!important}.scroll-progress{transition:none}}
 @media print{navi-contact,.motion-toggle,.scroll-progress{display:none!important}.reveal{opacity:1;transform:none}.hero h1{font-size:44px}.tracker-scene{display:none}}
+
+.client-logo img{clip-path:inset(2%);object-fit:contain}

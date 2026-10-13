@@ -130,6 +130,7 @@ test('verified client images load from repository and motion respects preference
   await page.goto('/');
   await page.locator('#clients').scrollIntoViewIfNeeded();
   await expect(page.locator('.client-logo img')).toHaveCount(7);
+  expect(await page.locator('.client-logo img').evaluateAll(images => images.every(image => image.getAttribute('src').startsWith('./assets/clients/')))).toBe(true);
   await expect.poll(() => page.locator('.client-logo img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
   await expect(page.locator('html')).toHaveClass(/motion-paused/);
   await expect(page.locator('.premium-tracker')).toHaveCSS('animation-name', 'none');
