@@ -1,3 +1,4 @@
+import './experience.js';
 import { estimateSavings, formatMoney, composeMessage, whatsappUrl } from './core.js';
 
 const $ = (selector) => document.querySelector(selector);

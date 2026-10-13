@@ -4,13 +4,14 @@ test('home, responsive layout and screenshots', async ({ page }, testInfo) => {
   const errors = [];
   page.on('pageerror', error => errors.push(error.message));
   await page.goto('/');
-  await expect(page.locator('h1')).toContainText('Каждый рейс');
+  await expect(page.locator('h1')).toContainText('Весь автопарк');
   await expect(page.locator('#monthly-saving')).toContainText('150');
   for (const width of [360, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   }
   await page.setViewportSize(testInfo.project.use.viewport || { width: 390, height: 844 });
+  await page.emulateMedia({ reducedMotion: 'reduce' });
   await page.screenshot({ path: testInfo.outputPath('homepage.png'), fullPage: true });
   await testInfo.attach('Homepage', { path: testInfo.outputPath('homepage.png'), contentType: 'image/png' });
   expect(errors).toEqual([]);
@@ -96,4 +97,49 @@ test('guides and contact paths work without JavaScript', async ({ browser }) => 
     expect(await page.locator('.source-list a').count()).toBeGreaterThan(0);
   }
   await context.close();
+});
+
+test('rental selection passes the chosen ownership model to the enquiry', async ({ page }) => {
+  await page.goto('/');
+  await page.locator('#ownership-buy').click();
+  await expect(page.locator('#ownership-title')).toContainText('Ваш комплект');
+  await page.locator('#ownership-cta').click();
+  await expect(page.locator('#lead-solution')).toHaveValue('GPS-мониторинг');
+  await page.locator('#ownership-rent').click();
+  await page.locator('#ownership-cta').click();
+  await expect(page.locator('#lead-solution')).toHaveValue('Аренда оборудования');
+});
+
+test('floating WhatsApp stays on screen and avoids the mobile action bar', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/');
+  for (const selector of ['#rental', '#calculator', '#contacts']) {
+    await page.locator(selector).scrollIntoViewIfNeeded();
+    const bubble = await page.locator('.whatsapp-float').boundingBox();
+    const bar = await page.locator('.mobile-cta').boundingBox();
+    expect(bubble.x).toBeGreaterThanOrEqual(0);
+    expect(bubble.x + bubble.width).toBeLessThanOrEqual(390);
+    expect(bubble.y).toBeGreaterThanOrEqual(0);
+    expect(bubble.y + bubble.height).toBeLessThan(bar.y);
+  }
+  await expect(page.locator('.whatsapp-float')).toHaveAttribute('href', 'https://wa.me/77753715077');
+});
+
+test('verified client images load from repository and motion respects preference', async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: 'reduce' });
+  await page.goto('/');
+  await page.locator('#clients').scrollIntoViewIfNeeded();
+  await expect(page.locator('.client-logo img')).toHaveCount(7);
+  await expect.poll(() => page.locator('.client-logo img').evaluateAll(images => images.every(image => image.complete && image.naturalWidth > 0))).toBe(true);
+  await expect(page.locator('html')).toHaveClass(/motion-paused/);
+  await expect(page.locator('.premium-tracker')).toHaveCSS('animation-name', 'none');
+  await expect(page.locator('.motion-toggle')).toBeHidden();
+});
+
+test('motion can be paused manually', async ({ page }) => {
+  await page.goto('/');
+  await page.getByRole('button', { name: 'Остановить анимацию' }).click();
+  await expect(page.locator('html')).toHaveClass(/motion-paused/);
+  await page.getByRole('button', { name: 'Включить анимацию' }).click();
+  await expect(page.locator('html')).not.toHaveClass(/motion-paused/);
 });
